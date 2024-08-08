@@ -1,0 +1,32 @@
+/* General container styles */
+div {
+    background-color: #333; 
+    color: #fff; 
+    padding: 20px; 
+    border-radius: 10px; 
+}
+
+/* Table styles */
+table {
+    width: 100%;
+    border-collapse: collapse; /* Remove space between table borders */
+}
+
+thead {
+    background-color: #233; /* Slightly lighter dark background for the header */
+}
+
+th, td {
+    padding: 10px; /* Padding inside the cells */
+    border: 1px solid #555; /* Border color for cells */
+}
+
+th {
+    font-weight: bold; /* Bold text for header cells */
+}
+
+tbody tr:nth-child(even) {
+    background-color: #333; 
+}
+
+

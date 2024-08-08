@@ -16,7 +16,7 @@ function dbCon() {
     const con = mysql.createConnection({
         host: "localhost",
         user: "amalieaa",
-        password: "AmaSome32224",
+        password: "*******",
         database: "Sideprojects"
     });
     con.connect(err => {
@@ -103,6 +103,16 @@ function search(term, res) {
         }
     });
 }
+function getSelectedPost(title,res){
+    let q = 'SELECT content FROM posts WHERE title like ?';
+    conn.query(q, [title], (err, result) => {
+        if (err) {
+            return res.status(500).json({ error: err.message });
+        } else {
+            return res.json(result);
+        }
+    });
+}
 
 app.post('/logIn', (req, res) => {
     const email = req.body.email;
@@ -133,3 +143,9 @@ app.post('/search', (req, res) => {
     const term = req.body.term;
     return search(term, res);
 });
+app.post('/getSelected', (req, res) => {
+    const title = req.body.title;
+    console.log(title);
+    return getSelectedPost(title, res);
+});
+
