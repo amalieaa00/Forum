@@ -1,0 +1,12 @@
+body{
+    color: #fff;
+    background-color: #222;
+
+}
+textarea,input{
+    color: #fff;
+    background-color: #022;
+    display: block;
+    width: 100%;
+    height: 100%;
+}

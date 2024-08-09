@@ -10,10 +10,10 @@ function Table({ ks, vals }) {
 
     const getPost = async (event) => {
         const selectedTitle = event.target.value;
-        setTitle(selectedTitle); // Set title for consistency, though not necessary for the request
+        setTitle(selectedTitle); 
         const response = await sendData({ title: selectedTitle }, 'http://localhost:5000/getSelected');
         if (response) {
-            setContent(response.content);
+            setContent(response[0].content);
             setDisp('p');
         }
     };
@@ -39,8 +39,7 @@ function Table({ ks, vals }) {
             </table>
         </div>
     );
-
-    const para = (
+    const post = (
         <div>
         <h1>{title}</h1>
             <p>
@@ -49,7 +48,7 @@ function Table({ ks, vals }) {
         </div>
     );
 
-    return disp === 'table' ? table : para;
+    return disp === 'table' ? table : post;
 }
 
 export default Table;

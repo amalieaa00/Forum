@@ -11,12 +11,12 @@ app.use(bodyParser.json());
 app.listen(5000, () => {
     console.log('Server is running on port 5000');
 });
-
+//function that creates a database connection
 function dbCon() {
     const con = mysql.createConnection({
         host: "localhost",
         user: "amalieaa",
-        password: "*******",
+        password: "***",//removed
         database: "Sideprojects"
     });
     con.connect(err => {
@@ -42,6 +42,7 @@ function getUser(un, pwd, res) {
                 if (err) {
                     return res.status(500).json({ error: err.message });
                 }
+                //checks if the user has given the correct password
                 if (compare) {
                     return res.json(data);
                 } else {
@@ -103,6 +104,7 @@ function search(term, res) {
         }
     });
 }
+//retrieves the post selected by the user from the database.
 function getSelectedPost(title,res){
     let q = 'SELECT content FROM posts WHERE title like ?';
     conn.query(q, [title], (err, result) => {

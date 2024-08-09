@@ -1,6 +1,6 @@
 import  { useState } from "react";
 import sendData from "./sendData";
-
+import '../addNewStyle.css';
 function AddNew({ email }) {
     const [disp, setDisp] = useState('AddNew');
     const [title, setTitle] = useState('');
