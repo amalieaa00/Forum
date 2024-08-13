@@ -20,8 +20,6 @@ function dbCon() {
         password: process.env.DB_PASS,
         database: "Sideprojects"
     });
-    console.log('DB_USER:', process.env.DB_USER);
-    console.log('DB_PASS:', process.env.DB_PASS);
 
     con.connect(err => {
         if (err) {
