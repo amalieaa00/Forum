@@ -1,19 +1,34 @@
-import '../tableStyles.css';
-import sendData from '../sendData';
 import { useState } from 'react';
+import sendData from '../sendData';
+import ShowPost from './ShowPost';
 
-function Table({ ks, vals }) {
+function Table({ ks, vals, user }) {
     const [disp, setDisp] = useState('table');
-    const [user, setUser] = useState('');
+    const [logInUser, setLogInUser] = useState(user);
     const [title, setTitle] = useState('');
     const [content, setContent] = useState({});
+    const [id, setId] = useState('');
+    const [postedBy, setPostedBy] = useState({});
+    const [replies, setReplies] = useState([]);
 
     const getPost = async (event) => {
         const selectedTitle = event.target.value;
         setTitle(selectedTitle); 
         const response = await sendData({ title: selectedTitle }, 'http://localhost:5000/getSelected');
-        if (response) {
-            setContent(response[0].content);
+        if (response && response.length > 0) {
+            // Assuming the first item in the response is the post, and the rest are replies
+            const mainPost = response[0];
+            setPostedBy(mainPost.postedBy);
+            setId(mainPost.id);
+            setContent(mainPost.mainContent);
+
+            // Extract replies from the response
+            const postReplies = response.map(item => ({
+                replyUser: item.repUser,
+                reply: item.answer,
+            })); // Filter out any null values
+
+            setReplies(postReplies);
             setDisp('p');
         }
     };
@@ -39,16 +54,8 @@ function Table({ ks, vals }) {
             </table>
         </div>
     );
-    const post = (
-        <div>
-        <h1>{title}</h1>
-            <p>
-                {content}
-            </p>
-        </div>
-    );
 
-    return disp === 'table' ? table : post;
+    return disp === 'table' ? table : <ShowPost title={title} postedBy={postedBy} content={content} replies={replies} pid={id} user={logInUser}></ShowPost>;
 }
 
 export default Table;

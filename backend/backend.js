@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const mysql = require('mysql2');
 const cors = require('cors');
@@ -14,11 +15,14 @@ app.listen(5000, () => {
 //function that creates a database connection
 function dbCon() {
     const con = mysql.createConnection({
-        host: "localhost",
-        user: "amalieaa",
-        password: "***",//removed
+        host: process.env.DB_HOST,
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS,
         database: "Sideprojects"
     });
+    console.log('DB_USER:', process.env.DB_USER);
+    console.log('DB_PASS:', process.env.DB_PASS);
+
     con.connect(err => {
         if (err) {
             console.log(err);
@@ -30,6 +34,7 @@ function dbCon() {
 }
 
 const conn = dbCon();
+
 
 function getUser(un, pwd, res) {
     const query = 'SELECT * FROM users WHERE email = ?';
@@ -105,14 +110,44 @@ function search(term, res) {
     });
 }
 //retrieves the post selected by the user from the database.
-function getSelectedPost(title,res){
-    let q = 'SELECT content FROM posts WHERE title like ?';
+function getSelectedPost(title, res) {
+    const q = `
+        SELECT
+            p.post_id as id, 
+            p.title, 
+            p.user AS postedBy, 
+            r.user AS repUser, 
+            p.content AS mainContent, 
+            r.content AS answer 
+        FROM 
+            posts AS p 
+        LEFT JOIN 
+            reply AS r 
+        ON 
+            p.post_id = r.rid 
+        WHERE 
+            p.title = ?
+    `;
+    
     conn.query(q, [title], (err, result) => {
         if (err) {
             return res.status(500).json({ error: err.message });
         } else {
+            console.log(result);
             return res.json(result);
         }
+    });
+}
+
+async function addReply(rid,user,content,res){
+    let q ='INSERT INTO reply (rid,user,content) values (?,?,?)'
+    conn.query(q, [rid,user,content], (err, data) => {
+        if (err) {
+            console.log(err.message);
+            return res.status(500).json({ error: err.message });
+        }
+        console.log('Added');
+        return res.json(data);
     });
 }
 
@@ -147,7 +182,13 @@ app.post('/search', (req, res) => {
 });
 app.post('/getSelected', (req, res) => {
     const title = req.body.title;
-    console.log(title);
+    ;
     return getSelectedPost(title, res);
 });
+app.post('/reply', (req, res) => {
+   const {rid,user,content}= req.body;
+   console.log(rid);
+   addReply(rid,user,content,res);
+});
+
 

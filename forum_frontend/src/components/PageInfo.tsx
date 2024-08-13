@@ -54,7 +54,7 @@ function PageInfo({ name, email }) {
     } else if (disp == 'seeAll') {
         return (
             <div>
-                <Table ks={allKeys} vals={allPosts}></Table>
+                <Table ks={allKeys} vals={allPosts} user={email}></Table>
             </div>
         );
     } else if (disp =='noPosts'){
